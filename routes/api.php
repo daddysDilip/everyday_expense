@@ -35,5 +35,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('transaction/editTransaction', [App\Http\Controllers\API\TransactionController::class, 'edit']);
     Route::post('transaction/deleteTransaction', [App\Http\Controllers\API\TransactionController::class, 'delete']);
     Route::get('transaction/getSymbols', [App\Http\Controllers\API\TransactionController::class, 'getSymbols']);
+    Route::post('transaction/getTicketTransactions', [App\Http\Controllers\API\TransactionController::class, 'get']);
 
 });
