@@ -28,11 +28,12 @@ Route::middleware('auth:api')->group(function () {
     // user tickets
     Route::post('ticket/addUserTicket', [App\Http\Controllers\API\TicketController::class, 'addUserTicket']);
     Route::post('ticket/updateTicket', [App\Http\Controllers\API\TicketController::class, 'edit']);
+    Route::post('ticket/getAllTickets', [App\Http\Controllers\API\TicketController::class, 'getUserTickets']);
 
     //user transaction
     Route::post('transaction/addTransaction', [App\Http\Controllers\API\TransactionController::class, 'add']);
     Route::post('transaction/editTransaction', [App\Http\Controllers\API\TransactionController::class, 'edit']);
     Route::post('transaction/deleteTransaction', [App\Http\Controllers\API\TransactionController::class, 'delete']);
+    Route::get('transaction/getSymbols', [App\Http\Controllers\API\TransactionController::class, 'getSymbols']);
 
-    
 });

@@ -117,8 +117,15 @@ class TransactionController extends BaseController
         return $this->sendResponse($success, $msg);
     }
 
+    /*
+    *   get all currency symbols
+    */
     function getSymbols()
     {
-        
+        $symbols = DB::table('country')
+                ->select('currency_name','currency_symbol')->distinct()
+                ->where('status', 1)->get();
+
+        return $this->sendResponse($symbols->toArray(), 'Retrieve currency symbol successfully.');
     }
 }
