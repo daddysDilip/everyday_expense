@@ -38,4 +38,11 @@ Route::middleware('auth:api')->group(function () {
     Route::post('transaction/getTicketTransactions', [App\Http\Controllers\API\TransactionController::class, 'get']);
     Route::post('transaction/getTransactionDetail', [App\Http\Controllers\API\TransactionController::class, 'getDetail']);
 
+    // user category
+    Route::post('category/getMyCategory', [App\Http\Controllers\API\CategoryController::class, 'get']);
+    Route::post('category/addMyCategory', [App\Http\Controllers\API\CategoryController::class, 'add']);
+    Route::post('category/editMyCategory', [App\Http\Controllers\API\CategoryController::class, 'edit']);
+    Route::post('category/deleteMyCategory', [App\Http\Controllers\API\CategoryController::class, 'delete']);
+
+
 });
