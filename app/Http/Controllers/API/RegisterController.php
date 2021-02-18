@@ -178,7 +178,7 @@ class RegisterController extends BaseController
         $id =$request->user_id;
         $success = User::leftJoin('country', 'country.id', '=', 'users.country_id')
             ->leftJoin('languages', 'languages.id', '=', 'users.language_id')
-            ->select('users.*', 'country.name as country_name', 'languages.name as language_name')
+            ->select('users.*', 'country.name as country_name', 'country.currency_symbol', 'languages.name as language_name')
             ->where('users.id', $id)->get();
         
         return $this->sendResponse($success->toArray(), 'User retrieved successfully.');

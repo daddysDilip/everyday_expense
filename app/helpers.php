@@ -109,3 +109,22 @@ function pr($data)
     print_r($data);
     echo "</pre>";
 }
+
+function date_query($field,$user_id,$alias)
+{
+    $user_date = DB::table('users')->where('api_token', $user_id)->first();
+    if($user_date->date_format == 'DD/MM/YYYY')
+        $sql_date = "%d/%m/%Y";
+    else if($user_date->date_format == 'MM/DD/YYYY')
+        $sql_date = "%m/%d/%Y";
+    else if($user_date->date_format == 'DD-MM-YYYY')
+        $sql_date = "%d-%m-%Y";
+    else if($user_date->date_format == 'MM-DD-YYYY')
+        $sql_date = "%m-%d-%Y";
+    else if($user_date->date_format == 'DD-MMM-YYYY')
+        $sql_date = "%d-%b-%Y";
+    else 
+        $sql_date = "%d-%m-%Y";
+
+    return 'DATE_FORMAT(('.$field.'), "'.$sql_date.'") as '.$alias;
+}
