@@ -81,7 +81,8 @@ class RegisterController extends BaseController
                 $data[] = [ "user_id"=>$user->id,
                             "category_id" => $val->id, 
                             "category_name" => $val->name, 
-                            "type" => $val->type
+                            "type" => $val->type,
+                            "icon" => $val->icon
                         ];
             }
             // insert batch
