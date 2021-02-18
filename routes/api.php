@@ -23,6 +23,8 @@ Route::middleware('auth:api')->group(function () {
 	// user account
     Route::get('account/countryLanguages', [App\Http\Controllers\API\RegisterController::class, 'getCountryLanguages']);
     Route::post('account/updateLanguage', [App\Http\Controllers\API\RegisterController::class, 'updateLanguage']);
+    Route::post('account/updateDateFormat', [App\Http\Controllers\API\RegisterController::class, 'updateDateFormat']);
+    Route::post('account/getUserDetail', [App\Http\Controllers\API\RegisterController::class, 'getUserDetail']);
     Route::post('account/getLanguageSetting', [App\Http\Controllers\API\RegisterController::class, 'getLanguageSetting']);
 
     // user tickets

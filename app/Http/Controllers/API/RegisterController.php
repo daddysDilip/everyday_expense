@@ -137,6 +137,54 @@ class RegisterController extends BaseController
     }
 
     /*
+    *   for upodate user date format
+    */
+    public function updateDateFormat(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id'     => 'required|numeric',
+            'date_format' => 'required|in:DD/MM/YYYY,MM/DD/YYYY,DD-MM-YYYY,MM-DD-YYYY,DD-MMM-YYYY'
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+
+        $id =$request->user_id;
+        $user = User::find($id);
+        $user->date_format  = $request->date_format;
+        $user->save();
+
+        $success = User::leftJoin('country', 'country.id', '=', 'users.country_id')
+        ->leftJoin('languages', 'languages.id', '=', 'users.language_id')
+        ->select('users.*', 'country.name as country_name', 'languages.name as language_name')
+        ->where('users.id', $id)->get();
+        
+        return $this->sendResponse($success->toArray(), 'Date format updated successfully.');
+    }
+
+    /*
+    *   get user's detail
+    */
+    function getUserDetail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id'     => 'required|numeric'
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        $id =$request->user_id;
+        $success = User::leftJoin('country', 'country.id', '=', 'users.country_id')
+            ->leftJoin('languages', 'languages.id', '=', 'users.language_id')
+            ->select('users.*', 'country.name as country_name', 'languages.name as language_name')
+            ->where('users.id', $id)->get();
+        
+        return $this->sendResponse($success->toArray(), 'User retrieved successfully.');
+    }
+
+    /*
     *   for get all settings, static buttons, or any text in perticular language. 
     *   also default seting in english
     */
