@@ -132,7 +132,7 @@ class CategoryController extends BaseController
             }
         }
 
-        return $this->sendResponse($success, 'Retrieve tickets successfully.');
+        return $this->sendResponse($success, 'Retrieve category successfully.');
     }
 
     /**

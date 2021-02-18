@@ -45,4 +45,11 @@ Route::middleware('auth:api')->group(function () {
     Route::post('category/deleteMyCategory', [App\Http\Controllers\API\CategoryController::class, 'delete']);
 
 
+    // user Reminders
+    Route::post('reminder/getMyReminder', [App\Http\Controllers\API\ReminderController::class, 'get']);
+    Route::post('reminder/addMyReminder', [App\Http\Controllers\API\ReminderController::class, 'add']);
+    Route::post('reminder/editMyReminder', [App\Http\Controllers\API\ReminderController::class, 'edit']);
+    Route::post('reminder/deleteMyReminder', [App\Http\Controllers\API\ReminderController::class, 'delete']);
+
+
 });
