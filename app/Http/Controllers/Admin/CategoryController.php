@@ -53,13 +53,13 @@ class CategoryController extends Controller
         $category->key_slug = get_unique_slug(slugify($request->input('name')), "category", "key_slug");
         // code for file upload
         if($files = $request->file('icon')){  
-            $name = $files->getClientOriginalName();  
+            $file_name = uniqid().".".$files->getClientOriginalExtension();
             $directory = "./category_icon/";
             if (!file_exists($directory)) {
               mkdir($directory, 0777, true);
             }
-            $save_name = "category_icon/".$name;
-            $files->move('category_icon',$name);
+            $save_name = "category_icon/".$file_name;
+            $files->move('category_icon',$file_name);  
             $category->icon = $save_name;
         }
         // end file upload
@@ -101,20 +101,23 @@ class CategoryController extends Controller
             $category->type = $request->input('type');
             $category->status = $request->input('status') != "" ? $request->input('status') : 0;
 
+            
+            if($category->icon != "" && $request->file('icon'))
+            {
+                unlink($category->icon);
+            }
 
             // code for file upload
             if($files = $request->file('icon')){  
-                $name = $files->getClientOriginalName();  
+                $file_name = uniqid().".".$files->getClientOriginalExtension();
                 $directory = "./category_icon/";
                 if (!file_exists($directory)) {
                   mkdir($directory, 0777, true);
                 }
-                $save_name = "category_icon/".$name;
-                $files->move('category_icon',$name);  
+                $save_name = "category_icon/".$file_name;
+                $files->move('category_icon',$file_name);  
                 $category->icon = $save_name;
             }
-            // end file upload
-
             if ($category->save()) {
                 //Redirect success
                 return redirect()->route('category')->with('success', 'Category updated successfully.');

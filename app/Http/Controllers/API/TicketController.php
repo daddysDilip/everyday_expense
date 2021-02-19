@@ -63,4 +63,38 @@ class TicketController extends BaseController
         return $this->sendResponse($success, 'Ticket updated successfully.');
     }
 
+    /**
+     * @return \Illuminate\Http\Response
+     *  get all tickets of a user
+     */
+    public function getUserTickets(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required'  
+        ]);
+        
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        $header = substr($request->header('Authorization'), 7);
+        if(!empty($request->search))
+        {
+            $search = $request->search;
+            $ticket = UserTicket::leftJoin('user_transactions as ut', 'ut.ticket_id', '=', 'user_tickets.id')
+                ->select(DB::raw(date_query("user_tickets.created_at",$header,"ticket_date")), 'user_tickets.name', DB::raw('(SUM(IF(ut.transaction_type = "0", ut.total_amount, 0)) - SUM(IF(ut.transaction_type = "1", ut.total_amount, 0))) as total_amount'))
+                ->where('user_tickets.user_id', $request->user_id)
+                ->where('user_tickets.name', 'LIKE', "%{$search}%")
+                ->groupBy('user_tickets.id')
+                ->get();    
+        } else {
+            $ticket = UserTicket::leftJoin('user_transactions as ut', 'ut.ticket_id', '=', 'user_tickets.id')
+                    ->select(DB::raw(date_query("user_tickets.created_at",$header,"ticket_date")), 'user_tickets.name', DB::raw('(SUM(IF(ut.transaction_type = "0", ut.total_amount, 0)) - SUM(IF(ut.transaction_type = "1", ut.total_amount, 0))) as total_amount'))
+                    ->where('user_tickets.user_id', $request->user_id)
+                    ->groupBy('user_tickets.id')
+                    ->get();
+        }
+        $success =  $ticket;
+        return $this->sendResponse($success, 'Retrieve tickets successfully.');
+    }
+
 }

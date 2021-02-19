@@ -49,21 +49,20 @@ class RegisterController extends BaseController
         if(is_null($user))
         {
             $user = new User;
+            $user->date_format = "DD/MM/YYYY";
         }
         $token = $user->createToken('EverydayExpense')->accessToken;
 
-        $user->username    =   $request->username;
-        $user->name        =   $request->name;
-        $user->email       =   $request->email;
-        $user->mobile      =   $request->mobile;
-        $user->gender      =   $request->gender;
-        $user->login_type  =   $request->login_type;
-        $user->user_type   =   1;
-        $user->api_token   =   $token;
+        $user->username   = $request->username;
+        $user->name       = $request->name;
+        $user->email      = $request->email;
+        $user->mobile     = $request->mobile;
+        $user->gender     = $request->gender;
+        $user->login_type = $request->login_type;
+        $user->user_type  = 1;
+        $user->api_token  = $token;
+        $user->user_image = $request->user_image;
        
-        $imageName = time().'.'.$request->user_image->extension();  
-        $request->user_image->move(public_path('profiles'), $imageName);
-        $user->user_image       =   $imageName;
         $user->save();
         $success =  $user;
 
@@ -81,7 +80,8 @@ class RegisterController extends BaseController
                 $data[] = [ "user_id"=>$user->id,
                             "category_id" => $val->id, 
                             "category_name" => $val->name, 
-                            "type" => $val->type
+                            "type" => $val->type,
+                            "icon" => $val->icon
                         ];
             }
             // insert batch
@@ -133,6 +133,54 @@ class RegisterController extends BaseController
         ->where('users.id', $id)->get();
         
         return $this->sendResponse($success->toArray(), 'Country and Languages updated successfully.');
+    }
+
+    /*
+    *   for upodate user date format
+    */
+    public function updateDateFormat(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id'     => 'required|numeric',
+            'date_format' => 'required|in:DD/MM/YYYY,MM/DD/YYYY,DD-MM-YYYY,MM-DD-YYYY,DD-MMM-YYYY'
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+
+        $id =$request->user_id;
+        $user = User::find($id);
+        $user->date_format  = $request->date_format;
+        $user->save();
+
+        $success = User::leftJoin('country', 'country.id', '=', 'users.country_id')
+        ->leftJoin('languages', 'languages.id', '=', 'users.language_id')
+        ->select('users.*', 'country.name as country_name', 'languages.name as language_name')
+        ->where('users.id', $id)->get();
+        
+        return $this->sendResponse($success->toArray(), 'Date format updated successfully.');
+    }
+
+    /*
+    *   get user's detail
+    */
+    function getUserDetail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id'     => 'required|numeric'
+        ]);
+
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        $id =$request->user_id;
+        $success = User::leftJoin('country', 'country.id', '=', 'users.country_id')
+            ->leftJoin('languages', 'languages.id', '=', 'users.language_id')
+            ->select('users.*', 'country.name as country_name', 'country.currency_symbol', 'languages.name as language_name')
+            ->where('users.id', $id)->get();
+        
+        return $this->sendResponse($success->toArray(), 'User retrieved successfully.');
     }
 
     /*
