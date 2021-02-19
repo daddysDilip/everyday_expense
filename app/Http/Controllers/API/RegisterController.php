@@ -49,21 +49,20 @@ class RegisterController extends BaseController
         if(is_null($user))
         {
             $user = new User;
+            $user->date_format = "DD/MM/YYYY";
         }
         $token = $user->createToken('EverydayExpense')->accessToken;
 
-        $user->username    =   $request->username;
-        $user->name        =   $request->name;
-        $user->email       =   $request->email;
-        $user->mobile      =   $request->mobile;
-        $user->gender      =   $request->gender;
-        $user->login_type  =   $request->login_type;
-        $user->user_type   =   1;
-        $user->api_token   =   $token;
+        $user->username   = $request->username;
+        $user->name       = $request->name;
+        $user->email      = $request->email;
+        $user->mobile     = $request->mobile;
+        $user->gender     = $request->gender;
+        $user->login_type = $request->login_type;
+        $user->user_type  = 1;
+        $user->api_token  = $token;
+        $user->user_image = $request->user_image;
        
-        $imageName = time().'.'.$request->user_image->extension();  
-        $request->user_image->move(public_path('profiles'), $imageName);
-        $user->user_image       =   $imageName;
         $user->save();
         $success =  $user;
 
