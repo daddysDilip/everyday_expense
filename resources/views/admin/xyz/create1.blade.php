@@ -1,27 +1,27 @@
 @extends('layouts.app')
 
 @section('extracss')
+
+@endsection
+
+@section('content')
 <style>
     .select2-container *:focus {
         outline: none;
     }
 </style>
-@endsection
-
-@section('content')
-
 <link rel="stylesheet" href="{{asset('backend/plugins/select2/css/select2.min.css')}}"/>
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Translationdfsfsdfsfsd</h1>
+            <h1 class="m-0 text-dark">Translation</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{route('admin')}}">Home</a></li>
-              <li class="breadcrumb-item"><a href="{{ route('translation') }}">Translation1</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('translation') }}">Translation</a></li>
               <li class="breadcrumb-item active">{{!empty($translation) ? "Update" : "Create"}} Translation</li>
             </ol>
           </div><!-- /.col -->
@@ -120,5 +120,34 @@
 @endsection
 
 @section('extrajs')
+<script src="{{ asset('backend/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}"></script>
 
+
+
+<script src="{{ asset('backend/plugins/select2/js/select2.min.js') }}"></script>
+
+
+<script>
+  $(document).ready(function() {
+      $('.select2').select2();
+
+    $("#translationForm").validate({
+      rules: {
+        content: {
+            required: true
+        },
+        language: {
+            required: true
+        },
+        translation: {
+            required: true
+        }
+      },
+      messages: {
+
+      },
+    })
+  });
+
+</script>
 @endsection
