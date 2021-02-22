@@ -12,7 +12,7 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    You are in ADMIN Dashboard!
+                    You are in ADMIN Dashboard 1!
                 </div>
             </div>
         </div>

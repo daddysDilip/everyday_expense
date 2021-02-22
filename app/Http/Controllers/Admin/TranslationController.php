@@ -31,7 +31,7 @@ class TranslationController extends Controller
      */
     public function create() {
         $activeTab = 'Translation';
-        return View('admin/xyz/create1', compact('activeTab'));
+        return View('admin/translation/create', compact('activeTab'));
     }
 
     /**

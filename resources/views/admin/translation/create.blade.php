@@ -1,22 +1,19 @@
 @extends('layouts.app')
 
 @section('extracss')
-<style>
-    .select2-container *:focus {
-        outline: none;
-    }
-</style>
+<link rel="stylesheet" href="{{asset('backend/plugins/select2/css/select2.min.css')}}"/>
+<link rel="stylesheet" href="{{asset('css/select2.css')}}"/>
 @endsection
 
 @section('content')
 
-<link rel="stylesheet" href="{{asset('backend/plugins/select2/css/select2.min.css')}}"/>
+
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Translationdfsfsdfsfsd</h1>
+            <h1 class="m-0 text-dark">Translation</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -55,7 +52,7 @@
                       <div class="card-body row ">
 
                         <div class="form-group col-md-12">
-                          <label for="translation">Select Content 1</label>
+                          <label for="translation">Select Content</label>
                             <select name="content" id="content" class="form-control select2">
                                 <option value="{{@$translation->content_id}}" >Select Content</option>
                                 @foreach (get_contents() as $content)
@@ -120,5 +117,26 @@
 @endsection
 
 @section('extrajs')
+<script src="{{asset('backend/plugins/select2/js/select2.full.min.js')}}"></script>
 
+<script>
+  $(document).ready(function() {
+      $('.select2').select2();
+    $("#translationForm").validate({
+      rules: {
+        content: {
+            required: true
+        },
+        language: {
+            required: true
+        },
+        translation: {
+            required: true
+        }
+      },
+      messages: {
+      },
+    })
+  });
+</script>
 @endsection
