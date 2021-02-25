@@ -34,7 +34,6 @@ class RegisterController extends BaseController
             'name'       => 'required',
             'email'      => 'required|email|max:255',
             'mobile'     => 'numeric',
-            'user_image' => 'mimes:jpeg,jpg,png,gif|max:10000',
             'gender'     => 'in:male,female,other',
             'login_type' => 'in:facebook,google'
         ]);
@@ -64,14 +63,14 @@ class RegisterController extends BaseController
         $user->user_image = $request->user_image;
        
         $user->save();
-        $success =  $user;
+        $success =  $user->toArray();
 
         // for insert default categories in to user catagory
         if(!is_null($user))
         {
             $user_category = UserCategory::where('user_id', $user->id)->first();
         }
-        if(is_null($user) || is_null($user_category))
+        if(is_null($user) && is_null($user_category))
         {
             $category = DB::table('category')->where('status', 1)->get();
             $data = array();

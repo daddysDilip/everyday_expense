@@ -31,7 +31,7 @@ class CategoryController extends Controller
      */
     public function create() {
         $activeTab = 'Category';
-        return View('admin/trans/create', compact('activeTab'));
+        return View('admin/category/create', compact('activeTab'));
     }
 
     /**

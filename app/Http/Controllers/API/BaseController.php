@@ -17,21 +17,28 @@ class BaseController extends Controller
      */
     public function sendResponse($result, $message)
     {
-    	if($result != "")
+        // pr($result);
+        // pr($message);
+        // die('bbbbbbbbbbb');
+    	if(!empty($result))
     	{
     		$response = [
                 'success' => true,
                 'data'    => $result,
                 'message' => $message,
+                'code' => 200,
             ];
 
     	}else{
     		$response = [
                 'success' => true,
                 'message' => $message,
+                'code' => 200,
             ];
     	}
-        return response()->json($response, 200);
+        // pr($response); die;
+        echo json_encode($response); die;
+        // return response()->json($response, 200);
     }
 
 
@@ -42,13 +49,25 @@ class BaseController extends Controller
      */
     public function sendError($error, $errorMessages = [], $code = 404)
     {
+        // die('aaaaaaaaaaaaa');
     	$response = [
             'success' => false,
             'message' => $error,
+            'code' => $code,
         ];
         if(!empty($errorMessages)){
-            $response['data'] = $errorMessages;
+            $last = (array)json_decode(json_encode($errorMessages));
+            if(!empty($last))
+            {
+                foreach($last as $key => $val)
+                {
+                    $last['lst'.$key] = $val;
+                    unset($last[$key]);
+                }
+            }
+            $response['data'] = $last;
         }
-        return response()->json($response, $code);
+        echo json_encode($response); die;
+        // return response()->json($response, $code);
     }
 }

@@ -128,8 +128,8 @@ class CategoryController extends BaseController
             if($val['icon'] != "")
             {
                 $success[$key]['icon'] = asset($val['icon']);
-                $success[$key]['type_string'] = $val['type'] == '1' ? "expense" : "income";
             }
+            $success[$key]['type_string'] = $val['type'] == '1' ? "expense" : "income";
         }
 
         return $this->sendResponse($success, 'Retrieve category successfully.');
