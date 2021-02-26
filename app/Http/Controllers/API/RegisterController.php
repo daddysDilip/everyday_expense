@@ -110,17 +110,17 @@ class RegisterController extends BaseController
     public function updateLanguage(Request $request)
     {
 
+        
         $validator = Validator::make($request->all(), [
-            'userid'   => 'required|numeric', // facebook or google's unique Id
+            'user_id'   => 'required|numeric', // facebook or google's unique Id
             'country_id' => 'required|numeric',
             'language_id' => 'required|numeric'
         ]);
-
+        
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
-
-        $id =$request->userid;
+        $id =$request->user_id;
         $user = User::find($id);
         $user->country_id  = $request->country_id;
         $user->language_id = $request->language_id;
@@ -130,8 +130,10 @@ class RegisterController extends BaseController
         ->leftJoin('languages', 'languages.id', '=', 'users.language_id')
         ->select('users.*', 'country.name as country_name', 'languages.name as language_name')
         ->where('users.id', $id)->get();
-        
-        return $this->sendResponse($success->toArray(), 'Country and Languages updated successfully.');
+        $success = $success->toArray();
+        unset($success[0]['api_token']);
+        //pr($success); die;
+        return $this->sendResponse($success, 'Country and Languages updated successfully.');
     }
 
     /*
@@ -249,7 +251,7 @@ class RegisterController extends BaseController
                'user_image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
             $date = date('Y-m-d h:i:s');
-            $id =$request->userid;
+            $id =$request->user_id;
 
             $user = User::find($id);
             if($user)

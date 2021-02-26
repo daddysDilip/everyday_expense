@@ -49,25 +49,34 @@ class BaseController extends Controller
      */
     public function sendError($error, $errorMessages = [], $code = 404)
     {
+        // pr($errorMessages);
         // die('aaaaaaaaaaaaa');
-    	$response = [
+    	/*$response = [
             'success' => false,
             'message' => $error,
             'code' => $code,
-        ];
-        if(!empty($errorMessages)){
-            $last = (array)json_decode(json_encode($errorMessages));
-            if(!empty($last))
+        ];*/
+        // if(!empty($errorMessages)){
+            // $last = (array)json_decode(json_encode($errorMessages));
+            /*if(!empty($last))
             {
                 foreach($last as $key => $val)
                 {
                     $last['lst'.$key] = $val;
                     unset($last[$key]);
                 }
-            }
-            $response['data'] = $last;
-        }
-        echo json_encode($response); die;
+            }*/
+            // $response['data'] = $last;
+        // }
+        // echo json_encode($response); die;
         // return response()->json($response, $code);
+        $response = [
+            'success' => false,
+            'message' => $error,
+        ];
+        if(!empty($errorMessages)){
+            $response['data'] = $errorMessages;
+        }
+        return response()->json($response, $code);
     }
 }

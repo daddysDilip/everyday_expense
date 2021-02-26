@@ -55,4 +55,5 @@ Route::middleware('auth:api')->group(function () {
 
     // Reports
     Route::post('report/getAllTransactions', [App\Http\Controllers\API\ReportController::class, 'getAllTransactions']);
+    Route::post('report/gethomeData', [App\Http\Controllers\API\ReportController::class, 'homeData']);
 });
