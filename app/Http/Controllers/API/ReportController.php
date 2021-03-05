@@ -64,6 +64,8 @@ class ReportController extends BaseController
                 {
                     $transations['income'][$key]['transaction_images'][$k] = asset($v);
                 }
+            } else {
+                $transations['income'][$key]['transaction_images'] = [];
             }
         }
         foreach($transations['expense'] as $key1 => $val1)
@@ -79,6 +81,8 @@ class ReportController extends BaseController
                 {
                     $transations['expense'][$key1]['transaction_images'][$k1] = asset($v1);
                 }
+            } else {
+                    $transations['expense'][$key1]['transaction_images'] = [];
             }
         }
         return $this->sendResponse($transations, 'Retrieve transactions successfully.');

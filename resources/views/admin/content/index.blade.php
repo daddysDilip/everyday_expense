@@ -35,7 +35,7 @@
                 <div class="card-header">
                     <h3 class="card-title">All Content</h3>
                     @if (get_user_permission("Content","add"))
-                      <a href="{{route('content.create')}}" class="btn btn-sm btn-info " style="float: right">Add Language</a>
+                      <a href="{{route('content.create')}}" class="btn btn-sm btn-info " style="float: right">Add Content</a>
                     @endif
                 </div>
                 <!-- /.card-header -->

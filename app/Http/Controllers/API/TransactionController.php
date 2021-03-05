@@ -33,7 +33,7 @@ class TransactionController extends BaseController
         if($validator->fails()){
             return $this->sendError('Validation Error.', $validator->errors());       
         }
-        
+
         $transation = new UserTransaction;
 
         $transation->user_id          = $request->user_id;
@@ -64,7 +64,7 @@ class TransactionController extends BaseController
         $transation->transaction_images = implode("#||#", $temp_files);
 
         $transation->save();
-        
+        $transation->transaction_images = explode("#||#", $transation->transaction_images);
         $success =  $transation;
         if($request->transaction_type == '1')
             return $this->sendResponse($success, 'successfully add expense.');
@@ -102,34 +102,38 @@ class TransactionController extends BaseController
         $transation->total_amount     = $request->total_amount;
         $transation->ticket_id        = $request->ticket_id;
         $transation->remark           = $request->remark;
-        $temp_files = [];
-        if ($files = $request->hasFile('transaction_images')) {
+        if($request->exists('transaction_images'))
+        {
+            $temp_files = [];
+            if ($files = $request->hasFile('transaction_images')) {
 
-            if($transation->transaction_images != "")
-            {
-                foreach(explode("#||#",$transation->transaction_images) as $v)
+                if($transation->transaction_images != "")
                 {
-                    if(file_exists($v))
-                        unlink($v);
+                    foreach(explode("#||#",$transation->transaction_images) as $v)
+                    {
+                        if(file_exists($v))
+                            unlink($v);
+                    }
                 }
-            }
 
-            foreach ($request->file('transaction_images') as $file) {
-                
-                $file_name = uniqid().".". $file->getClientOriginalExtension();
-                $directory = "./transaction/";
-                if (!file_exists($directory)) {
-                  mkdir($directory, 0777, true);
+                foreach ($request->file('transaction_images') as $file) {
+                    
+                    $file_name = uniqid().".". $file->getClientOriginalExtension();
+                    $directory = "./transaction/";
+                    if (!file_exists($directory)) {
+                      mkdir($directory, 0777, true);
+                    }
+                    $save_name = "transaction/".$file_name;
+                    $file->move('transaction',$file_name); 
+                    $temp_files[] = $save_name;
+                    
                 }
-                $save_name = "transaction/".$file_name;
-                $file->move('transaction',$file_name); 
-                $temp_files[] = $save_name;
-                
             }
+            $transation->transaction_images = implode("#||#", $temp_files);
         }
-        $transation->transaction_images = implode("#||#", $temp_files);
 
         $transation->save();
+        $transation->transaction_images = explode("#||#", $transation->transaction_images);
         $success =  $transation;
         
         if($request->transaction_type == '1')
@@ -246,6 +250,8 @@ class TransactionController extends BaseController
                 {
                     $transations['income'][$key]['transaction_images'][$k] = asset($v);
                 }
+            } else {
+                $transations['income'][$key]['transaction_images'] = [];
             }
         }
         foreach($transations['expense'] as $key1 => $val1)
@@ -261,6 +267,8 @@ class TransactionController extends BaseController
                 {
                     $transations['expense'][$key1]['transaction_images'][$k1] = asset($v1);
                 }
+            } else {
+                $transations['expense'][$key1]['transaction_images'] = [];
             }
         }
         return $this->sendResponse($transations, 'Retrieve transactions successfully.');

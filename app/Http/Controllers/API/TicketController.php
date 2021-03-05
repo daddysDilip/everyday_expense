@@ -71,8 +71,8 @@ class TicketController extends BaseController
      */
     public function getUserTickets(Request $request)
     {
-        // try{
-            
+        try{
+            echo 10/0;
         
             if($validator->fails()){
                 return $this->sendError('Validation Error.', $validator->errors());       
@@ -97,9 +97,14 @@ class TicketController extends BaseController
             $success =  $ticket;
             return $this->sendResponse($success, 'Retrieve tickets successfully.');
 
-        /*} catch (\Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }*/
+        } catch (Exception $e) {
+            die('adadaadad');
+            $this->reportException($e);
+            // This calls the report() method of `App\Exceptions\Handler`
+
+            $response = $this->renderException($request, $e);
+            // This calls the render() method of `App\Exceptions\Handler`
+        }
     }
 
 }

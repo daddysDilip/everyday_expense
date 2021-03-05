@@ -20,22 +20,22 @@ class BaseController extends Controller
         // pr($result);
         // pr($message);
         // die('bbbbbbbbbbb');
-    	if(!empty($result))
-    	{
-    		$response = [
+        if(!empty($result))
+        {
+            $response = [
                 'success' => true,
-                'data'    => $result,
+                'data'    => json_decode(json_encode($result)),
                 'message' => $message,
                 'code' => 200,
             ];
 
-    	}else{
-    		$response = [
+        }else{
+            $response = [
                 'success' => true,
                 'message' => $message,
                 'code' => 200,
             ];
-    	}
+        }
         // pr($response); die;
         echo json_encode($response); die;
         // return response()->json($response, 200);
@@ -49,34 +49,25 @@ class BaseController extends Controller
      */
     public function sendError($error, $errorMessages = [], $code = 404)
     {
-        // pr($errorMessages);
         // die('aaaaaaaaaaaaa');
-    	/*$response = [
+        $response = [
             'success' => false,
             'message' => $error,
             'code' => $code,
-        ];*/
-        // if(!empty($errorMessages)){
-            // $last = (array)json_decode(json_encode($errorMessages));
-            /*if(!empty($last))
+        ];
+        if(!empty($errorMessages)){
+            $last = (array)json_decode(json_encode($errorMessages));
+            if(!empty($last))
             {
                 foreach($last as $key => $val)
                 {
                     $last['lst'.$key] = $val;
                     unset($last[$key]);
                 }
-            }*/
-            // $response['data'] = $last;
-        // }
-        // echo json_encode($response); die;
-        // return response()->json($response, $code);
-        $response = [
-            'success' => false,
-            'message' => $error,
-        ];
-        if(!empty($errorMessages)){
-            $response['data'] = $errorMessages;
+            }
+            $response['data'] = $last;
         }
-        return response()->json($response, $code);
+        echo json_encode($response); die;
+        // return response()->json($response, $code);
     }
 }
