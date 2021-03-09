@@ -202,13 +202,13 @@ class TransactionController extends BaseController
                     
             $income = UserTransaction::leftJoin('user_category as uc','uc.id','=','user_transactions.user_category_id')
                     ->leftJoin('category as c','c.id','=','uc.category_id')
-                    ->select('user_transactions.id', DB::raw(date_query("user_transactions.transaction_date",$header,"transaction_date")), 'user_transactions.currency_symbol', 'user_transactions.total_amount', 'user_transactions.remark', 'user_transactions.transaction_images', 'uc.category_name', DB::raw('IF(uc.is_user_defiend = "1", uc.category_name, c.name) as category_name'), DB::raw('IF(uc.is_user_defiend = "1", uc.icon, c.icon) as category_icon'))
+                    ->select('user_transactions.id', DB::raw(date_query("user_transactions.transaction_date",$header,"transaction_date")), 'user_transactions.currency_symbol', 'user_transactions.total_amount', 'user_transactions.remark', 'user_transactions.user_category_id', 'user_transactions.transaction_images', 'uc.category_name', DB::raw('IF(uc.is_user_defiend = "1", uc.category_name, c.name) as category_name'), DB::raw('IF(uc.is_user_defiend = "1", uc.icon, c.icon) as category_icon'))
                     ->whereBetween('user_transactions.transaction_date', array($request->from_date, $request->to_date))
                     ->where('ticket_id', $request->ticket_id)->where('transaction_type', '0')->get();
 
             $expense = UserTransaction::leftJoin('user_category as uc','uc.id','=','user_transactions.user_category_id')
                     ->leftJoin('category as c','c.id','=','uc.category_id')
-                    ->select('user_transactions.id', DB::raw(date_query("user_transactions.transaction_date",$header,"transaction_date")), 'user_transactions.currency_symbol', 'user_transactions.transaction_images', 'user_transactions.total_amount', 'user_transactions.remark', 'uc.category_name', DB::raw('IF(uc.is_user_defiend = "1", uc.category_name, c.name) as category_name'), DB::raw('IF(uc.is_user_defiend = "1", uc.icon, c.icon) as category_icon'))
+                    ->select('user_transactions.id', DB::raw(date_query("user_transactions.transaction_date",$header,"transaction_date")), 'user_transactions.currency_symbol', 'user_transactions.user_category_id', 'user_transactions.transaction_images', 'user_transactions.total_amount', 'user_transactions.remark', 'uc.category_name', DB::raw('IF(uc.is_user_defiend = "1", uc.category_name, c.name) as category_name'), DB::raw('IF(uc.is_user_defiend = "1", uc.icon, c.icon) as category_icon'))
                     ->whereBetween('user_transactions.transaction_date', array($request->from_date, $request->to_date))
                     ->where('ticket_id', $request->ticket_id)->where('transaction_type', '1')->get();
         } else {
@@ -221,14 +221,14 @@ class TransactionController extends BaseController
 
             $income = UserTransaction::leftJoin('user_category as uc','uc.id','=','user_transactions.user_category_id')
                     ->leftJoin('category as c','c.id','=','uc.category_id')
-                    ->select('user_transactions.id', DB::raw(date_query("user_transactions.transaction_date",$header,"transaction_date")), 'user_transactions.currency_symbol', 'user_transactions.total_amount', 'user_transactions.remark', 'user_transactions.transaction_images', 'uc.category_name', DB::raw('IF(uc.is_user_defiend = "1", uc.category_name, c.name) as category_name'), DB::raw('IF(uc.is_user_defiend = "1", uc.icon, c.icon) as category_icon'))
+                    ->select('user_transactions.id', DB::raw(date_query("user_transactions.transaction_date",$header,"transaction_date")), 'user_transactions.currency_symbol', 'user_transactions.user_category_id', 'user_transactions.total_amount', 'user_transactions.remark', 'user_transactions.transaction_images', 'uc.category_name', DB::raw('IF(uc.is_user_defiend = "1", uc.category_name, c.name) as category_name'), DB::raw('IF(uc.is_user_defiend = "1", uc.icon, c.icon) as category_icon'))
                     ->where('ticket_id', $request->ticket_id)
                     ->where('transaction_type', '0')
                     ->get();
 
             $expense = UserTransaction::leftJoin('user_category as uc','uc.id','=','user_transactions.user_category_id')
                     ->leftJoin('category as c','c.id','=','uc.category_id')
-                    ->select('user_transactions.id', DB::raw(date_query("user_transactions.transaction_date",$header,"transaction_date")), 'user_transactions.currency_symbol', 'user_transactions.total_amount', 'user_transactions.remark', 'user_transactions.transaction_images', 'uc.category_name', DB::raw('IF(uc.is_user_defiend = "1", uc.category_name, c.name) as category_name'), DB::raw('IF(uc.is_user_defiend = "1", uc.icon, c.icon) as category_icon'))
+                    ->select('user_transactions.id', DB::raw(date_query("user_transactions.transaction_date",$header,"transaction_date")), 'user_transactions.currency_symbol', 'user_transactions.user_category_id', 'user_transactions.total_amount', 'user_transactions.remark', 'user_transactions.transaction_images', 'uc.category_name', DB::raw('IF(uc.is_user_defiend = "1", uc.category_name, c.name) as category_name'), DB::raw('IF(uc.is_user_defiend = "1", uc.icon, c.icon) as category_icon'))
                     ->where('ticket_id', $request->ticket_id)
                     ->where('transaction_type', '1')
                     ->get();

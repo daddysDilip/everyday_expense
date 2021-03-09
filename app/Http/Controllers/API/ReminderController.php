@@ -96,9 +96,19 @@ class ReminderController extends BaseController
             return $this->sendError('Validation Error.', $validator->errors());       
         }
         
-        $reminder = Reminders::where('user_id', $request->user_id)
+        $reminder = Reminders::leftJoin('user_category as uc','uc.id','=','user_reminders.user_category_id')
+                    ->leftJoin('category as c','c.id','=','uc.category_id')
+                    ->where('user_reminders.user_id', $request->user_id)
+                    ->select('user_reminders.*', 'uc.category_name', DB::raw('IF(uc.is_user_defiend = "1", uc.category_name, c.name) as category_name'), DB::raw('IF(uc.is_user_defiend = "1", uc.icon, c.icon) as category_icon'))
                 ->get();
         $success =  $reminder->toArray();
+        foreach ($success as $key => $val)
+        {
+            if($val['category_icon'] != "")
+            {
+                $success[$key]['category_icon'] = asset($val['category_icon']);
+            }
+        }
         return $this->sendResponse($success, 'Retrieve reminders successfully.');
     }
 

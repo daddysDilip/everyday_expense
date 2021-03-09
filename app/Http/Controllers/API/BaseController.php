@@ -20,8 +20,8 @@ class BaseController extends Controller
         // pr($result);
         // pr($message);
         // die('bbbbbbbbbbb');
-        if(!empty($result))
-        {
+        // if(!empty($result))
+        // {
             $response = [
                 'success' => true,
                 'data'    => json_decode(json_encode($result)),
@@ -29,13 +29,13 @@ class BaseController extends Controller
                 'code' => 200,
             ];
 
-        }else{
-            $response = [
-                'success' => true,
-                'message' => $message,
-                'code' => 200,
-            ];
-        }
+        // }else{
+        //     $response = [
+        //         'success' => true,
+        //         'message' => $message,
+        //         'code' => 200,
+        //     ];
+        // }
         // pr($response); die;
         echo json_encode($response); die;
         // return response()->json($response, 200);
