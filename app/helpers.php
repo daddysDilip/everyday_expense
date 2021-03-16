@@ -128,3 +128,46 @@ function date_query($field,$user_id,$alias)
 
     return 'DATE_FORMAT(('.$field.'), "'.$sql_date.'") as '.$alias;
 }
+
+function push_notification_send($data, $message, $title, $payload)
+{
+            
+    // if (sizeof($data) != 0) {
+
+        // if($image == "") {
+            // static image
+            $image = "https://s3.us-west-2.amazonaws.com/meadionce-test/doctor/doctor_145498475120190920035703.png";
+        // }
+
+        // prep the bundle
+        $msg = array(
+            'message'   => $message,
+            'title'     => $title,
+            'image'     => $image,
+            'payload'   => $payload,
+            'type'      => ""
+        );
+
+        $fields = array(
+            'registration_ids'  => $data,
+            'data'          => $msg
+        );
+
+        $headers = array(
+            'Authorization: key=AAAAY25-At0:APA91bHMilssntLNfBtIwXx6tYjW_bOO6pil9DpLcUtvjR6J-vy0fJkzZibv3ucMALuOF0F9x0QwFDJfa2-2k6-npGbRly0GVpskifL8ggBcalF0Qlc5I7njj1YF3J1wDoXDkdhfSkmT',
+            'Content-Type: application/json'
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        $result["android"] = curl_exec($ch);
+        curl_close($ch);
+       
+    // }
+    return $result;
+}

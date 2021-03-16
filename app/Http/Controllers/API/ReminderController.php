@@ -61,6 +61,7 @@ class ReminderController extends BaseController
             'week_day'          => 'in:sun,mon,tus,wed,thu,fri,sat,',
             'month_day'         => 'in:1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,',
             'reminder_time'     => 'required',
+            // 'is_active'         => 'required|in:1,0',
             'id'                => 'required'
         ]);
         
@@ -75,12 +76,36 @@ class ReminderController extends BaseController
         $reminder->week_day      = $request->week_day;
         $reminder->month_day     = $request->month_day;
         $reminder->reminder_time = $request->reminder_time;
+        // $reminder->is_active     = $request->is_active;
         $reminder->user_category_id = $request->user_category_id;
 
         $reminder->save();
         $success =  $reminder;
         
         return $this->sendResponse($success, 'Category updated successfully.');
+    }
+
+    /**
+     *  edit user reminder
+     */
+    public function on_off(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'is_active'         => 'required|in:1,0',
+            'id'                => 'required'
+        ]);
+        
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        
+        $reminder            = Reminders::find($request->id);
+        $reminder->is_active = $request->is_active;
+
+        $reminder->save();
+        $success =  $reminder;
+        
+        return $this->sendResponse($success, 'Reminder status updated successfully.');
     }
 
     /**

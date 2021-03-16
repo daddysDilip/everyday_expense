@@ -34,6 +34,7 @@ class RegisterController extends BaseController
             'name'       => 'required',
             'email'      => 'required|email|max:255',
             'mobile'     => 'numeric',
+            'fcm_token'  => 'required',
             'gender'     => 'in:male,female,other',
             'login_type' => 'in:facebook,google'
         ]);
@@ -56,6 +57,7 @@ class RegisterController extends BaseController
         $user->name       = $request->name;
         $user->email      = $request->email;
         $user->mobile     = $request->mobile;
+        $user->fcm_token  = $request->fcm_token;
         $user->gender     = $request->gender;
         $user->login_type = $request->login_type;
         $user->user_type  = 1;

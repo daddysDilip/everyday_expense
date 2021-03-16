@@ -52,6 +52,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('reminder/addMyReminder', [App\Http\Controllers\API\ReminderController::class, 'add']);
     Route::post('reminder/editMyReminder', [App\Http\Controllers\API\ReminderController::class, 'edit']);
     Route::post('reminder/deleteMyReminder', [App\Http\Controllers\API\ReminderController::class, 'delete']);
+    Route::post('reminder/onOffReminder', [App\Http\Controllers\API\ReminderController::class, 'on_off']);
 
     // Reports
     Route::post('report/getAllTransactions', [App\Http\Controllers\API\ReportController::class, 'getAllTransactions']);
