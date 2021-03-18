@@ -22,6 +22,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('cron/reminder', [App\Http\Controllers\CronController::class, 'sendReminders'])->name('reminder');
+Route::get('cron/send_noti', [App\Http\Controllers\CronController::class, 'send_noti'])->name('reminder_test');
 
 Route::get('/user', [App\Http\Controllers\UserController::class, 'index'])->name('user')->middleware(['user']);
 

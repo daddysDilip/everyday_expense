@@ -129,16 +129,12 @@ function date_query($field,$user_id,$alias)
     return 'DATE_FORMAT(('.$field.'), "'.$sql_date.'") as '.$alias;
 }
 
-function push_notification_send($data, $message, $title, $payload)
+function push_notification_send($data, $message, $title, $payload, $image = "")
 {
             
-    // if (sizeof($data) != 0) {
-
-        // if($image == "") {
-            // static image
-            $image = "https://s3.us-west-2.amazonaws.com/meadionce-test/doctor/doctor_145498475120190920035703.png";
-        // }
-
+    
+        // $image = "https://s3.us-west-2.amazonaws.com/meadionce-test/doctor/doctor_145498475120190920035703.png";
+        
         // prep the bundle
         $msg = array(
             'message'   => $message,
@@ -149,7 +145,7 @@ function push_notification_send($data, $message, $title, $payload)
         );
 
         $fields = array(
-            'registration_ids'  => $data,
+            'registration_ids'  => array($data),
             'data'          => $msg
         );
 
@@ -165,9 +161,96 @@ function push_notification_send($data, $message, $title, $payload)
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
-        $result["android"] = curl_exec($ch);
+        $result = curl_exec($ch);
+        if ($result === FALSE) {
+            die('FCM Send Error: ' . curl_error($ch));
+        } else {
+            pr($result);
+        }
         curl_close($ch);
        
     // }
     return $result;
+}
+
+function new_curl()
+{
+    $url = "https://fcm.googleapis.com/fcm/send";
+    $token = "efdJ498WTP2CajBIGut_dE:APA91bFSe1HUAqmjspU0qEyfoeSxj4IMZKOkT-fEpFxomwKnPYnd-2kPnM-j4bXlzXwrovoDETrDMd9gqtcTguP7f91FsgydWp15uuFF9zByJTGup9FcMq9NJ_gJdgHKJelBFAh6T9Md";
+    $serverKey = 'AAAAY25-At0:APA91bHMilssntLNfBtIwXx6tYjW_bOO6pil9DpLcUtvjR6J-vy0fJkzZibv3ucMALuOF0F9x0QwFDJfa2-2k6-npGbRly0GVpskifL8ggBcalF0Qlc5I7njj1YF3J1wDoXDkdhfSkmT';
+    $title = "Dilip test title";
+    $body = "Hello I am from Your php server and it is testing";
+
+    $notification = array('title' =>$title , 'body' => $body, 'sound' => 'default', 'badge' => '1', 'click_action' => 'FCM_PLUGIN_ACTIVITY');
+    $arrayToSend = array('to' => $token, 'notification' => $notification,'priority'=>'high');
+    $json = json_encode($arrayToSend);
+    echo $json;
+    $headers = array();
+    $headers[] = 'Content-Type: application/json';
+    $headers[] = 'Authorization: key='. $serverKey;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+    //Send the request
+    $response = curl_exec($ch);
+    //Close request
+    if ($response === FALSE) {
+        die('FCM Send Error: ' . curl_error($ch));
+    } else {
+        pr($response);
+    }
+    curl_close($ch);
+}
+
+function test_notification()
+{
+    // API access key from Google API's Console
+    define( 'API_ACCESS_KEY', 'AAAAY25-At0:APA91bHMilssntLNfBtIwXx6tYjW_bOO6pil9DpLcUtvjR6J-vy0fJkzZibv3ucMALuOF0F9x0QwFDJfa2-2k6-npGbRly0GVpskifL8ggBcalF0Qlc5I7njj1YF3J1wDoXDkdhfSkmT' );
+    $token = "efdJ498WTP2CajBIGut_dE:APA91bFSe1HUAqmjspU0qEyfoeSxj4IMZKOkT-fEpFxomwKnPYnd-2kPnM-j4bXlzXwrovoDETrDMd9gqtcTguP7f91FsgydWp15uuFF9zByJTGup9FcMq9NJ_gJdgHKJelBFAh6T9Md";
+
+    $registrationIds = array($token);
+
+    // prep the bundle
+    $msg = array
+    (
+        'message'   => 'here is a message. message',
+        'title'     => 'This is a title. title',
+        'subtitle'  => 'This is a subtitle. subtitle',
+        'tickerText'    => 'Ticker text here...Ticker text here...Ticker text here',
+        'vibrate'   => 1,
+        'sound'     => 1,
+        'largeIcon' => 'large_icon',
+        'smallIcon' => 'small_icon'
+    );
+
+    $fields = array
+    (
+        'registration_ids'  => $registrationIds,
+        'data'          => $msg
+    );
+     
+    $headers = array
+    (
+        'Authorization: key=' . API_ACCESS_KEY,
+        'Content-Type: application/json'
+    );
+    pr($fields);
+    $ch = curl_init();
+    curl_setopt( $ch,CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send' );
+    curl_setopt( $ch,CURLOPT_POST, true );
+    curl_setopt( $ch,CURLOPT_HTTPHEADER, $headers );
+    curl_setopt( $ch,CURLOPT_RETURNTRANSFER, true );
+    // curl_setopt( $ch,CURLOPT_SSL_VERIFYPEER, false );
+    curl_setopt( $ch,CURLOPT_POSTFIELDS, json_encode( $fields ) );
+    $result = curl_exec($ch );
+    if ($result === FALSE) {
+        die('FCM Send Error: ' . curl_error($ch));
+    } else {
+        pr($result);
+    }
+    curl_close( $ch );
+
+    // echo $result;
 }

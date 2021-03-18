@@ -46,6 +46,7 @@ class RegisterController extends BaseController
         $input = $request->all();
 
 		$user = User::where('username', $request->username)->first();
+        $temp_use = $user;
         if(is_null($user))
         {
             $user = new User;
@@ -72,7 +73,7 @@ class RegisterController extends BaseController
         {
             $user_category = UserCategory::where('user_id', $user->id)->first();
         }
-        if(is_null($user) && is_null($user_category))
+        if(is_null($temp_use) && is_null($user_category))
         {
             $category = DB::table('category')->where('status', 1)->get();
             $data = array();
