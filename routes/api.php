@@ -26,6 +26,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('account/updateDateFormat', [App\Http\Controllers\API\RegisterController::class, 'updateDateFormat']);
     Route::post('account/getUserDetail', [App\Http\Controllers\API\RegisterController::class, 'getUserDetail']);
     Route::post('account/getLanguageSetting', [App\Http\Controllers\API\RegisterController::class, 'getLanguageSetting']);
+    Route::post('account/updateProfile', [App\Http\Controllers\API\RegisterController::class, 'updateprofile']);
 
     // user tickets
     Route::post('ticket/addUserTicket', [App\Http\Controllers\API\TicketController::class, 'addUserTicket']);

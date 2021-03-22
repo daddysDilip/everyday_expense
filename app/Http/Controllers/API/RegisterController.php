@@ -259,26 +259,35 @@ class RegisterController extends BaseController
             $user = User::find($id);
             if($user)
             {
-            	$user->firstname  = $request->firstname;
-		        $user->lastname   = $request->lastname;
-		        $user->name       = $request->firstname .' '.$request->lastname;
-		        $user->contactno  = $request->contactno;
-		        $user->ageGroup   = $request->ageGroup;
-		        $user->address    = $request->address;
-		        $user->country    = $request->country;
-		        $user->state      = $request->state;
-		        $user->city       = $request->city;
-		        $user->gender     = $request->gender;
-		        $user->dob        = $request->dob;
+                if($request->name)
+                {
+            	   $user->name = $request->name;
+                }
+                if($request->email)
+                {
+                   $user->email = $request->email;
+                }
+                if($request->mobile)
+                {
+                   $user->mobile= $request->mobile;
+                }
+                if($request->fcm_token)
+                {
+                   $user->fcm_token = $request->fcm_token;
+                }
+                if($request->gender)
+                {
+                   $user->gender = $request->gender;
+                }
 
 		        if($request->hasFile('user_image')) 
 		        {
-	                 if($request->file('user_image'))
-		             {
-			            $new_name = rand() . '.' . $request->user_image->getClientOriginalExtension();
-			            $request->user_image->move(public_path('profiles/'), $new_name);
-			            $user->user_image       =   $new_name;
-		             }
+                    if($request->file('user_image'))
+                    {
+                        $new_name = rand() . '.' . $request->user_image->getClientOriginalExtension();
+                        $request->user_image->move(public_path('profiles/'), $new_name);
+                        $user->user_image       =   $new_name;
+                    }
 	            }
 
 	            if(!$user->save()) {
@@ -287,8 +296,13 @@ class RegisterController extends BaseController
 	            }
 
 	             //Redirect success
-	             $success =  $user;
-	             return $this->sendResponse($success, 'updated profile successfully.');
+                if($user->user_image != "")
+                {
+                    $temp = "profiles/".$user->user_image;
+                    $user->user_image = asset($temp);
+                }
+                $success =  $user;
+	            return $this->sendResponse($success, 'updated profile successfully.');
 
             }else
             {
