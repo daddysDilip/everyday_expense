@@ -8,6 +8,7 @@ use Crypt;
 use Illuminate\Support\Facades\Auth;
 use Validator;
 use DB;
+use Log;
 
 class ReportController extends BaseController
 {
@@ -110,5 +111,64 @@ class ReportController extends BaseController
         $transations['ticket_count'] = $users_count;
 
         return $this->sendResponse($transations, 'Total of transactions successfully.');        
+    }
+
+    //parameters details
+    // user_category_id_arr -> [1,2,3,4,5,6]
+    // type -> 0/1 -> 1=exp, 0=income
+    function getGraphData(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'type'    => 'required|in:1,0'
+        ]);
+        
+        if($validator->fails()){
+            return $this->sendError('Validation Error.', $validator->errors());       
+        }
+        $user = Auth::user();
+        $header = substr($request->header('Authorization'), 7);
+        DB::enableQueryLog();
+        $query = DB::table('user_transactions')->leftJoin('user_category as uc','uc.id','=','user_transactions.user_category_id')
+            ->leftJoin('category as c','c.id','=','uc.category_id');
+
+        $query = $query->select('user_transactions.id', 'user_transactions.user_category_id', 'uc.category_name', DB::raw('IF(uc.is_user_defiend = "1", uc.category_name, c.name) as category_name'), DB::raw('IF(uc.is_user_defiend = "1", uc.icon, c.icon) as category_icon'), DB::raw('SUM( user_transactions.total_amount) as total_amount'));
+        
+        if($request->from_date != "" && $request->to_date != "")
+        {
+            $query = $query->whereBetween('user_transactions.transaction_date', array($request->from_date, $request->to_date));
+        }
+        //->whereIn('id', [1, 2, 3])
+        if(!empty($request->user_category_id_arr))
+        {
+            $query = $query->whereIn('user_transactions.user_category_id', $request->user_category_id_arr);
+        }
+
+        $query = $query->where('user_transactions.user_id', $user->id);
+
+        $query = $query->where('user_transactions.transaction_type', $request->type);
+         $query = $query->groupBy('user_transactions.user_category_id')->get();
+        $res = $query->toArray();
+        Log::debug('Last query-------->'.json_encode(DB::getQueryLog()));
+        // pr($res); die;
+
+        $x_axis = [];
+        $y_axis = [];
+        if(!empty($res))
+        {
+            foreach($res as $key => $val)
+            {
+                $x_axis[$key] = [
+                    "user_category_id" => $val->user_category_id,
+                    "category_name" => $val->category_name,
+                    "category_icon" => asset($val->category_icon)
+                ];
+                $y_axis[$key] = $val->total_amount;
+            }
+        }
+
+        $reports['x_axis'] = $x_axis;
+        $reports['y_axis'] = $y_axis;
+
+        return $this->sendResponse($reports, 'Report generated successfully.');  
     }
 }
