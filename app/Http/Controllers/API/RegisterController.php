@@ -136,7 +136,7 @@ class RegisterController extends BaseController
         $success = $success->toArray();
         unset($success[0]['api_token']);
         //pr($success); die;
-        return $this->sendResponse($success, 'Country and Languages updated successfully.');
+        return $this->sendResponse($success, 'Data updated successfully.');
     }
 
     /*
